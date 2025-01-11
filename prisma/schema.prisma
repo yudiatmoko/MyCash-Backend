@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @unique @default(uuid())
+  name         String
+  email        String        @unique
+  phoneNumber  String?       @unique @map("phone_number")
+  image        String?
+  password     String
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  transactions Transaction[]
+
+  @@map("users")
+}
+
+model Outlet {
+  id           String        @id @unique @default(uuid())
+  name         String
+  type         String
+  slug         String
+  phoneNumber  String        @map("phone_number")
+  address      String
+  district     String
+  city         String
+  province     String
+  image        String?
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  categories   Category[]
+  products     Product[]
+  transactions Transaction[]
+
+  @@map("outlets")
+}
+
+model Category {
+  id        String    @id @unique @default(uuid())
+  name      String
+  slug      String
+  outletId  String
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  products  Product[]
+
+  outlet Outlet @relation(fields: [outletId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("categories")
+}
+
+model Product {
+  id                 String              @id @unique @default(uuid())
+  name               String
+  image              String?
+  description        String
+  price              Float
+  status             Boolean
+  stock              Int
+  categoryId         String
+  outletId           String
+  createdAt          DateTime            @default(now()) @map("created_at")
+  updatedAt          DateTime            @updatedAt @map("updated_at")
+  transactionDetails TransactionDetail[]
+
+  category Category @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  outlet   Outlet   @relation(fields: [outletId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("products")
+}
+
+model Transaction {
+  id            String              @id @unique @default(uuid())
+  date          DateTime
+  totalPrice    Float               @map("total_price")
+  totalPayment  Float               @map("total_payment")
+  totalCharge   Float               @map("total_charge")
+  paymentMethod PaymentMethod       @map("payment_method")
+  note          String?
+  userId        String
+  outletId      String
+  createdAt     DateTime            @default(now()) @map("created_at")
+  updatedAt     DateTime            @updatedAt @map("updated_at")
+  details       TransactionDetail[]
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  outlet Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}
+
+model TransactionDetail {
+  id            String @id @unique @default(uuid())
+  transactionId String
+  productId     String
+  productName   String @map("product_name")
+  productQty    Int    @map("product_qty")
+  productPrice  Float  @map("product_price")
+  totalPrice    Float  @map("total_price")
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  product     Product     @relation(fields: [productId], references: [id])
+
+  @@map("transaction_details")
+}
+
+enum PaymentMethod {
+  CASH
+  QRIS
+}
