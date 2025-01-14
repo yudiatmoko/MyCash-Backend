@@ -14,35 +14,35 @@ datasource db {
 }
 
 model User {
-  id           String        @id @unique @default(uuid())
-  name         String
-  email        String        @unique
-  phoneNumber  String?       @unique @map("phone_number")
-  image        String?
-  password     String
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  transactions Transaction[]
+  id          String    @id @unique @default(uuid())
+  name        String
+  email       String    @unique
+  phoneNumber String?   @unique @map("phone_number")
+  image       String?
+  password    String
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  sessions    Session[]
 
   @@map("users")
 }
 
 model Outlet {
-  id           String        @id @unique @default(uuid())
-  name         String
-  type         String
-  slug         String
-  phoneNumber  String        @map("phone_number")
-  address      String
-  district     String
-  city         String
-  province     String
-  image        String?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
-  categories   Category[]
-  products     Product[]
-  transactions Transaction[]
+  id          String     @id @unique @default(uuid())
+  name        String
+  type        String
+  slug        String
+  phoneNumber String     @map("phone_number")
+  address     String
+  district    String
+  city        String
+  province    String
+  image       String?
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  categories  Category[]
+  products    Product[]
+  Session     Session[]
 
   @@map("outlets")
 }
@@ -89,14 +89,12 @@ model Transaction {
   totalCharge   Float               @map("total_charge")
   paymentMethod PaymentMethod       @map("payment_method")
   note          String?
-  userId        String
-  outletId      String
+  sessionId     String
   createdAt     DateTime            @default(now()) @map("created_at")
   updatedAt     DateTime            @updatedAt @map("updated_at")
   details       TransactionDetail[]
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  outlet Outlet @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  session Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
   @@map("transactions")
 }
@@ -119,4 +117,29 @@ model TransactionDetail {
 enum PaymentMethod {
   CASH
   QRIS
+}
+
+model Session {
+  id           String        @id @default(uuid())
+  date         DateTime      @map("session_date")
+  shift        Shift         @map("shift")
+  startingCash Float         @map("starting_cash")
+  totalRevenue Float         @default(0) @map("total_revenue")
+  checkInTime  DateTime?     @map("check_in_time")
+  checkOutTime DateTime?     @map("check_out_time")
+  userId       String
+  outletId     String
+  transactions Transaction[]
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  outlet Outlet @relation(fields: [outletId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+enum Shift {
+  MORNING
+  EVENING
 }
