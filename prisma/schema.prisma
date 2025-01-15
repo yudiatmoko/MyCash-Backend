@@ -20,6 +20,7 @@ model User {
   phoneNumber String?   @unique @map("phone_number")
   image       String?
   password    String
+  isVerified  Boolean   @default(false) @map("is_verified")
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   sessions    Session[]
@@ -142,4 +143,14 @@ model Session {
 enum Shift {
   MORNING
   EVENING
+}
+
+model Otp {
+  id        String   @id @default(uuid())
+  email     String
+  otpCode   String   @map("otp_code")
+  expiresAt DateTime @map("expires_at")
+
+  @@index([email])
+  @@map("otp")
 }

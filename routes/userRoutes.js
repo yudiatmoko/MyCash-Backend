@@ -1,6 +1,7 @@
 import express from "express";
 import UserController from "../controllers/UserController.js";
 import uploadImageMiddleware from "../middlewares/uploadImageMiddleware.js";
+import { authenticateToken } from "../config/jwt.js";
 import {
   registerValidationRules,
   loginValidationRules,
@@ -11,7 +12,7 @@ import {
 const router = express.Router();
 
 router.get("/", UserController.get);
-router.get("/(:id)", UserController.getById);
+router.get("/(:id)", authenticateToken, UserController.getById);
 router.post(
   "/register",
   registerValidationRules(),
@@ -21,6 +22,7 @@ router.post(
 router.post("/login", loginValidationRules(), validate, UserController.login);
 router.put(
   "/(:id)",
+  authenticateToken,
   registerValidationRules(),
   uploadImageMiddleware,
   validate,
@@ -28,10 +30,13 @@ router.put(
 );
 router.put(
   "/(:id)/password",
+  authenticateToken,
   updatePasswordValidationRules(),
   validate,
   UserController.updatePassword
 );
-router.delete("/(:id)", UserController.delete);
+router.delete("/(:id)", authenticateToken, UserController.delete);
+router.post("/generate-otp", authenticateToken, UserController.generateOtp);
+router.post("/verify-otp", authenticateToken, UserController.verifyOtp);
 
 export default router;

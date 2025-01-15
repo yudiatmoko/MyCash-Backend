@@ -18,6 +18,35 @@ class UserController {
     }
   }
 
+  async generateOtp(req, res) {
+    try {
+      const user = await UserService.getUserByEmail(req.body.email);
+      if (!user) {
+        res.status(404).json({ status: "Error", message: "User not found" });
+      } else {
+        const result = await UserService.generateOtp(req.body.email);
+        res.status(200).json({
+          status: "Success",
+          message: result,
+        });
+      }
+    } catch (error) {
+      res.status(500).json({ status: "Error", message: error.message });
+    }
+  }
+
+  async verifyOtp(req, res) {
+    try {
+      const result = await UserService.verifyOtp(req.body.email, req.body.otp);
+      res.status(200).json({
+        status: "Success",
+        message: result,
+      });
+    } catch (error) {
+      res.status(500).json({ status: "Error", message: error.message });
+    }
+  }
+
   async login(req, res) {
     try {
       const user = await UserService.loginUser(
@@ -37,15 +66,9 @@ class UserController {
   async update(req, res) {
     try {
       const { id } = req.params;
-      const { name, email, phoneNumber } = req.body;
+      const { name, phoneNumber } = req.body;
       const image = req.file;
-      const user = await UserService.updateUser(
-        id,
-        name,
-        email,
-        phoneNumber,
-        image
-      );
+      const user = await UserService.updateUser(id, name, phoneNumber, image);
       res.status(200).json({
         status: "Success",
         message: "User updated successfully",
