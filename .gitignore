@@ -7,7 +7,7 @@ npm-shrinkwrap.json
 
 # Environment variables
 .env
-.pem
+*.pem
 
 # Coveralls
 .nyc_output
