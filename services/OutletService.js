@@ -77,7 +77,6 @@ class OutletService {
     const newData = {
       name: name || existingOutlet.name,
       type: type || existingOutlet.type,
-      address: address || existingOutlet.address,
       phoneNumber: phoneNumber || existingOutlet.phoneNumber,
       address: address || existingOutlet.address,
       district: district || existingOutlet.district,
