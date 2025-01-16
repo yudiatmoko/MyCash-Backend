@@ -61,7 +61,6 @@ class UserService {
     await UserModel.updateUser(user.id, { isVerified: true });
     await OtpModel.deleteOtpByEmail(email);
     return "OTP verified successfully";
-    zz;
   }
 
   async loginUser(email, password) {
@@ -119,6 +118,18 @@ class UserService {
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     const updatedUser = await UserModel.updateUser(id, {
+      password: hashedPassword,
+    });
+    return updatedUser;
+  }
+
+  async resetPassword(email, newPassword) {
+    const user = await UserModel.getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    const updatedUser = await UserModel.updateUser(user.id, {
       password: hashedPassword,
     });
     return updatedUser;

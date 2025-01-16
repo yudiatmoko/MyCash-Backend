@@ -133,6 +133,19 @@ class UserController {
       res.status(500).json({ status: "Error", message: error.message });
     }
   }
+
+  async resetPassword(req, res) {
+    try {
+      await UserService.verifyOtp(req.body.email, req.body.otp);
+      await UserService.resetPassword(req.body.email, req.body.newPassword);
+      res.status(200).json({
+        status: "Success",
+        message: "Password reset successfully",
+      });
+    } catch (error) {
+      res.status(500).json({ status: "Error", message: error.message });
+    }
+  }
 }
 
 export default new UserController();
