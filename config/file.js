@@ -13,8 +13,6 @@ function deleteFile(filePath) {
       console.error(`Error removing file: ${err}`);
       return;
     }
-
-    console.log(`File ${filePath} has been successfully removed.`);
   });
 }
 
@@ -24,7 +22,6 @@ function deleteImageByFilename(filename) {
       console.error(`Error removing file: ${err}`);
       return;
     }
-    console.log(`File ${filename} has been successfully removed.`);
   });
 }
 

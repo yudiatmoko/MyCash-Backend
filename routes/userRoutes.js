@@ -5,6 +5,7 @@ import { authenticateToken } from "../config/jwt.js";
 import {
   registerValidationRules,
   loginValidationRules,
+  updateValidationRules,
   updatePasswordValidationRules,
   validate,
 } from "../middlewares/userValidationMiddleware.js";
@@ -23,7 +24,7 @@ router.post("/login", loginValidationRules(), validate, UserController.login);
 router.put(
   "/(:id)",
   authenticateToken,
-  registerValidationRules(),
+  updateValidationRules(),
   uploadImageMiddleware,
   validate,
   UserController.update

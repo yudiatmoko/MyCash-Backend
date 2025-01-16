@@ -24,6 +24,7 @@ model User {
   createdAt   DateTime  @default(now()) @map("created_at")
   updatedAt   DateTime  @updatedAt @map("updated_at")
   sessions    Session[]
+  outlets     Outlet[]
 
   @@map("users")
 }
@@ -32,18 +33,20 @@ model Outlet {
   id          String     @id @unique @default(uuid())
   name        String
   type        String
-  slug        String
   phoneNumber String     @map("phone_number")
   address     String
   district    String
   city        String
   province    String
   image       String?
+  userId      String
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
   categories  Category[]
   products    Product[]
-  Session     Session[]
+  sessions    Session[]
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   @@map("outlets")
 }

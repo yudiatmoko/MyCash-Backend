@@ -4,6 +4,7 @@ import UserModel from "../models/UserModel.js";
 import OtpModel from "../models/OtpModel.js";
 import { generateToken } from "../config/jwt.js";
 import sendEmail from "../config/sendEmail.js";
+import { deleteImageByFilename } from "../config/file.js";
 
 class UserService {
   async registerUser(name, email, password) {
@@ -96,6 +97,9 @@ class UserService {
     }
     let imagePath = user.image;
     if (image) {
+      if (user.image) {
+        deleteImageByFilename(user.image);
+      }
       imagePath = image.filename;
     }
     const newData = {
@@ -141,17 +145,30 @@ class UserService {
   }
 
   async deleteUser(id) {
+    const user = await UserModel.getUserById(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (user.image) {
+      deleteImageByFilename(user.image);
+    }
     const deletedUser = await UserModel.deleteUser(id);
     return deletedUser;
   }
 
   async getUserById(id) {
     const user = await UserModel.getUserById(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
     return user;
   }
 
   async getUserByEmail(email) {
     const user = await UserModel.getUserByEmail(email);
+    if (!user) {
+      throw new Error("User not found");
+    }
     return user;
   }
 }

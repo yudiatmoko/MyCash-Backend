@@ -2,6 +2,24 @@ import { body, validationResult } from "express-validator";
 import fs from "fs";
 
 export const registerValidationRules = () => [
+  body("name")
+    .notEmpty()
+    .withMessage("Name is required")
+    .isString()
+    .withMessage("Name must be a string"),
+  body("email")
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Must be a valid email address"),
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 8 })
+    .withMessage("Password must be at least 8 characters long"),
+];
+
+export const updateValidationRules = () => [
   body("name").optional().isString().withMessage("Name must be a string"),
   body("email")
     .optional()
@@ -19,18 +37,22 @@ export const registerValidationRules = () => [
 
 export const loginValidationRules = () => [
   body("email")
-    .optional()
+    .notEmpty()
+    .withMessage("Email is required")
     .isEmail()
     .withMessage("Must be a valid email address"),
   body("password")
-    .optional()
+    .notEmpty()
+    .withMessage("Password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
 ];
 
 export const updatePasswordValidationRules = () => [
+  body("oldPassword").notEmpty().withMessage("Old password is required"),
   body("newPassword")
-    .optional()
+    .notEmpty()
+    .withMessage("New password is required")
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters long"),
 ];

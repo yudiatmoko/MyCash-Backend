@@ -56,6 +56,16 @@ class UserModel {
   updateUser = async (id, user) => {
     const updatedUser = await this.prisma.user.update({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        image: true,
+        isVerified: true,
+        createdAt: true,
+        updatedAt: true,
+      },
       data: user,
     });
     return updatedUser;
