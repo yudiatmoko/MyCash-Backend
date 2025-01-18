@@ -141,6 +141,9 @@ class UserService {
 
   async getAllUsers() {
     const users = await UserModel.getAllUsers();
+    if (users.length === 0){
+      throw new Error("Users not found")
+    }
     return users;
   }
 

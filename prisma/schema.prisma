@@ -68,13 +68,13 @@ model Category {
 model Product {
   id                 String              @id @unique @default(uuid())
   name               String
-  image              String
   description        String
   price              Float
   status             Boolean
-  stock              Int? 
+  stock              Int?
   categoryId         String
   outletId           String
+  image              String
   createdAt          DateTime            @default(now()) @map("created_at")
   updatedAt          DateTime            @updatedAt @map("updated_at")
   transactionDetails TransactionDetail[]

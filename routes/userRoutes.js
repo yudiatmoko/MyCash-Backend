@@ -24,8 +24,8 @@ router.post("/login", loginValidationRules(), validate, UserController.login);
 router.put(
   "/(:id)",
   authenticateToken,
-  updateValidationRules(),
   uploadImageMiddleware,
+  updateValidationRules(),
   validate,
   UserController.update
 );

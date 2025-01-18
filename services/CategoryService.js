@@ -13,7 +13,7 @@ class CategoryService {
   }
   async getAllCategories() {
     const categories = await CategoryModel.getAllCategories();
-    if (!categories) {
+    if (categories.length === 0) {
       throw new Error("Categories not found");
     }
     return categories;
@@ -27,7 +27,7 @@ class CategoryService {
   }
   async getCategoriesByOutlet(outletId) {
     const categories = await CategoryModel.getCategoriesByOutlet(outletId);
-    if (!categories) {
+    if (categories.length === 0) {
       throw new Error("No categories found for the outlet");
     }
     return categories;

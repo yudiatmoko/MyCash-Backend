@@ -5,7 +5,7 @@ import UserService from "../services/UserService.js";
 class OutletService {
   async getAllOutlets() {
     const outlets = await OutletModel.getAllOutlets();
-    if (!outlets) {
+    if (outlets.length === 0) {
       throw new Error("No outlets found");
     }
     return outlets;
@@ -22,7 +22,7 @@ class OutletService {
   async getOutletsByUser(userId) {
     await UserService.getUserById(userId);
     const outlets = await OutletModel.getOutletsByUserId(userId);
-    if (!outlets) {
+    if (outlets.length === 0) {
       throw new Error("No outlets found for the user");
     }
     return outlets;

@@ -4,7 +4,7 @@ import { authenticateToken, protectedRoute } from "../config/jwt.js";
 import {
   addCategoryValidationRules,
   validate,
-} from "../middlewares/categoryValidationMiddleware copy.js";
+} from "../middlewares/categoryValidationMiddleware.js";
 
 const router = express.Router();
 
