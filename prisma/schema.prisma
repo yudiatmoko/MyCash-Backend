@@ -118,34 +118,24 @@ model TransactionDetail {
   @@map("transaction_details")
 }
 
-enum PaymentMethod {
-  CASH
-  QRIS
-}
-
 model Session {
   id           String        @id @default(uuid())
   date         DateTime      @map("session_date")
   shift        Shift         @map("shift")
   startingCash Float         @map("starting_cash")
   totalRevenue Float         @default(0) @map("total_revenue")
-  checkInTime  DateTime?     @map("check_in_time")
+  checkInTime  DateTime?     @default(now()) @map("check_in_time")
   checkOutTime DateTime?     @map("check_out_time")
   userId       String
   outletId     String
-  transactions Transaction[]
   createdAt    DateTime      @default(now()) @map("created_at")
   updatedAt    DateTime      @updatedAt @map("updated_at")
+  transactions Transaction[]
 
   outlet Outlet @relation(fields: [outletId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 
   @@map("sessions")
-}
-
-enum Shift {
-  MORNING
-  EVENING
 }
 
 model Otp {
@@ -156,4 +146,14 @@ model Otp {
 
   @@index([email])
   @@map("otp")
+}
+
+enum PaymentMethod {
+  CASH
+  QRIS
+}
+
+enum Shift {
+  MORNING
+  EVENING
 }

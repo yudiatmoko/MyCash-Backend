@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "sessions" ALTER COLUMN "check_in_time" SET DEFAULT CURRENT_TIMESTAMP;
