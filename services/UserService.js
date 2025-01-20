@@ -29,6 +29,7 @@ class UserService {
   }
 
   async generateOtp(email) {
+    await this.getUserByEmail(email);
     const otp = crypto.randomInt(100000, 999999).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await OtpModel.deleteOtpByEmail(email);
@@ -65,7 +66,7 @@ class UserService {
   }
 
   async loginUser(email, password) {
-    const user = await UserModel.getUserByEmail(email, password);
+    const user = await UserModel.getUserByEmail(email);
     if (!user) {
       throw new Error("Invalid email or password");
     }
@@ -73,7 +74,6 @@ class UserService {
     if (!isPasswordValid) {
       throw new Error("Invalid email or password");
     }
-
     const token = generateToken({ id: user.id, email: user.email });
     return {
       id: user.id,
@@ -85,10 +85,7 @@ class UserService {
   }
 
   async updateUser(id, name, phoneNumber, image) {
-    const user = await UserModel.getUserById(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = await this.getUserById(id);
     const existingPhoneNumber = await UserModel.getUserByPhoneNumber(
       phoneNumber
     );
@@ -112,10 +109,7 @@ class UserService {
   }
 
   async updatePassword(id, oldPassword, newPassword) {
-    const user = await UserModel.getUserById(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = await this.getUserById(id);
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
       throw new Error("Invalid old password");
@@ -128,10 +122,7 @@ class UserService {
   }
 
   async resetPassword(email, newPassword) {
-    const user = await UserModel.getUserByEmail(email);
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = await this.getUserByEmail(email);
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     const updatedUser = await UserModel.updateUser(user.id, {
       password: hashedPassword,
@@ -141,17 +132,14 @@ class UserService {
 
   async getAllUsers() {
     const users = await UserModel.getAllUsers();
-    if (users.length === 0){
-      throw new Error("Users not found")
+    if (users.length === 0) {
+      throw new Error("Users not found");
     }
     return users;
   }
 
   async deleteUser(id) {
-    const user = await UserModel.getUserById(id);
-    if (!user) {
-      throw new Error("User not found");
-    }
+    const user = await this.getUserById(id);
     if (user.image) {
       deleteImageByFilename(user.image);
     }

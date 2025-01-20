@@ -63,10 +63,7 @@ class OutletService {
     province,
     image
   ) {
-    const existingOutlet = await OutletModel.getOutletById(id);
-    if (!existingOutlet) {
-      throw new Error("Outlet not found");
-    }
+    const existingOutlet = await this.getOutletById(id);
     let imagePath = existingOutlet.image;
     if (image) {
       if (existingOutlet.image) {
@@ -90,10 +87,7 @@ class OutletService {
   }
 
   async deleteOutlet(id) {
-    const outlet = await OutletModel.getOutletById(id);
-    if (!outlet) {
-      throw new Error("Outlet not found");
-    }
+    const outlet = await this.getOutletById(id);
     if (outlet.image) {
       deleteImageByFilename(outlet.image);
     }

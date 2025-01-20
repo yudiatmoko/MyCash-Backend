@@ -3,16 +3,7 @@ import ProductService from "../services/ProductService.js";
 class ProductController {
   async add(req, res) {
     try {
-      const price = parseFloat(req.body.price);
-      if (isNaN(price) || price <= 0) {
-        throw new Error("Price must be a positive number");
-      }
-      const stock = req.body.stock ? parseInt(req.body.stock, 10) : null;
-      if (stock < 0) {
-        throw new Error("Stock must be a non-negative integer");
-      }
-      const { name, description, categoryId, outletId } = req.body;
-      const status = req.body.status === "true" ? true : false;
+      const { name, description, price, status, stock, categoryId, outletId } = req.body;
       const image = req.file;
       const product = await ProductService.addProduct(
         name,
@@ -22,7 +13,7 @@ class ProductController {
         stock,
         categoryId,
         outletId,
-        image.filename
+        image
       );
       res.status(200).json({
         status: "Success",

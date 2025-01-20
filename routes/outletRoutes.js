@@ -35,8 +35,8 @@ router.put(
   "/(:id)",
   authenticateToken,
   protectedRoute,
-  uploadImageMiddleware,
   updateOutletValidationRules(),
+  uploadImageMiddleware,
   validate,
   OutletController.update
 );

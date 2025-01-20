@@ -20,16 +20,11 @@ class UserController {
 
   async generateOtp(req, res) {
     try {
-      const user = await UserService.getUserByEmail(req.body.email);
-      if (!user) {
-        res.status(404).json({ status: "Error", message: "User not found" });
-      } else {
-        const result = await UserService.generateOtp(req.body.email);
-        res.status(200).json({
-          status: "Success",
-          message: result,
-        });
-      }
+      const result = await UserService.generateOtp(req.body.email);
+      res.status(200).json({
+        status: "Success",
+        message: result,
+      });
     } catch (error) {
       res.status(500).json({ status: "Error", message: error.message });
     }

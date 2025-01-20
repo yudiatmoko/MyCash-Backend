@@ -1,6 +1,6 @@
 import ProductModel from "../models/ProductModel.js";
-import OutletModel from "../models/OutletModel.js";
-import CategoryModel from "../models/CategoryModel.js";
+import OutletService from "../services/OutletService.js";
+import CategoryService from "../services/CategoryService.js";
 import { deleteImageByFilename } from "../config/file.js";
 
 class ProductService {
@@ -14,23 +14,26 @@ class ProductService {
     outletId,
     image
   ) {
-    const existingOutlet = await OutletModel.getOutletById(outletId);
-    if (!existingOutlet) {
-      throw new Error("Outlet not found");
+    await CategoryService.getCategoryById(categoryId);
+    await OutletService.getOutletById(outletId);
+    const floatPrice = parseFloat(price);
+    if (isNaN(price) || price <= 0) {
+      throw new Error("Price must be a positive number");
     }
-    const existingCategory = await CategoryModel.getCategoryById(categoryId);
-    if (!existingCategory) {
-      throw new Error("Category not found");
+    const intStock = stock ? parseInt(stock, 10) : null;
+    if (stock < 0) {
+      throw new Error("Stock must be a non-negative integer");
     }
+    const booleanStatus = status === "true" ? true : false;
     const product = {
       name,
       description,
-      price,
-      status,
-      stock,
+      price: floatPrice,
+      status: booleanStatus,
+      stock: intStock,
       categoryId,
       outletId,
-      image,
+      image: image.filename,
     };
     const newProduct = await ProductModel.addProduct(product);
     return newProduct;
@@ -53,10 +56,7 @@ class ProductService {
   }
 
   async getProductsByOutlet(outletId) {
-    const existingOutlet = await OutletModel.getOutletById(outletId);
-    if (!existingOutlet) {
-      throw new Error("Outlet not found");
-    }
+    await OutletService.getOutletById(outletId);
     const products = await ProductModel.getProductsByOutlet(outletId);
     if (products.length === 0) {
       throw new Error("No products found for the outlet");
@@ -82,10 +82,7 @@ class ProductService {
     categoryId,
     image
   ) {
-    const existingProduct = await ProductModel.getProductById(id);
-    if (!existingProduct) {
-      throw new Error("Product not found");
-    }
+    const existingProduct = await this.getProductById(id);
     const floatPrice = price ? parseFloat(price) : existingProduct.price;
     if (price && (isNaN(floatPrice) || floatPrice <= 0)) {
       throw new Error("Price must be a positive number");
@@ -94,7 +91,7 @@ class ProductService {
     if (stock && intStock < 0) {
       throw new Error("Stock must be a non-negative integer");
     }
-    const booleanStatus = status === "true" ? true : false;
+    const booleanStatus = status === "true" ? true : status === "false" ? false : null;
     let imagePath = existingProduct.image;
     if (image) {
       if (existingProduct.image) {
@@ -116,10 +113,7 @@ class ProductService {
   }
 
   async deleteProduct(id) {
-    const existingProduct = await ProductModel.getProductById(id);
-    if (!existingProduct) {
-      throw new Error("Product not found");
-    }
+    const existingProduct = await this.getProductById(id);
     if (existingProduct.image) {
       deleteImageByFilename(existingProduct.image);
     }
