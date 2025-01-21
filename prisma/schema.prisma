@@ -87,6 +87,7 @@ model Product {
 
 model Transaction {
   id            String              @id @unique @default(uuid())
+  number        Int                 
   date          DateTime
   totalPrice    Float               @map("total_price")
   totalPayment  Float               @map("total_payment")
@@ -94,6 +95,7 @@ model Transaction {
   paymentMethod PaymentMethod       @map("payment_method")
   note          String?
   sessionId     String
+  isVoided      Boolean             @default(false)
   createdAt     DateTime            @default(now()) @map("created_at")
   updatedAt     DateTime            @updatedAt @map("updated_at")
   details       TransactionDetail[]

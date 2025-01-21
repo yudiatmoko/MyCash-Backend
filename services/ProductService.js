@@ -91,7 +91,8 @@ class ProductService {
     if (stock && intStock < 0) {
       throw new Error("Stock must be a non-negative integer");
     }
-    const booleanStatus = status === "true" ? true : status === "false" ? false : null;
+    const booleanStatus =
+      status === "true" ? true : status === "false" ? false : null;
     let imagePath = existingProduct.image;
     if (image) {
       if (existingProduct.image) {
@@ -119,6 +120,19 @@ class ProductService {
     }
     const deletedProduct = await ProductModel.deleteProduct(id);
     return deletedProduct;
+  }
+
+  async updateProductStock(id, stock) {
+    await this.getProductById(id);
+    const intStock = parseInt(stock, 10);
+    if (isNaN(intStock) || intStock < 0) {
+      throw new Error("Stock must be a non-negative integer");
+    }
+    const product = {
+      stock: intStock,
+    };
+    const updatedProduct = await ProductModel.updateProduct(id, product);
+    return updatedProduct;
   }
 }
 

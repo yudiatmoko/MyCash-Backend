@@ -13,15 +13,10 @@ export const validate = (req, res, next) => {
   const errors = validationResult(req);
   const errorMessage = errors.array().map((error) => error.msg);
   if (!errors.isEmpty()) {
-    if (req.file) {
-      fs.unlink(req.file.path, (err) => {
-        if (err) console.error("Error deleting file:", err);
-      });
-    }
-
     return res.status(400).json({
       status: "Error",
-      message: errorMessage,
+      message: "Validation failed",
+      errors: errorMessage,
     });
   }
   next();

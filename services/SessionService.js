@@ -74,6 +74,15 @@ class SessionService {
     return updatedSession;
   }
 
+  async updateRevenue(id, amount) {
+    const exsistingSession = await this.getSessionById(id);
+    const totalRevenue = {
+      totalRevenue: exsistingSession.totalRevenue + amount,
+    };
+    const updateSession = await SessionModel.updateSession(id, totalRevenue);
+    return updateSession;
+  }
+
   async deleteSession(id) {
     await this.getSessionById(id);
     const deletedSession = await SessionModel.deleteSession(id);

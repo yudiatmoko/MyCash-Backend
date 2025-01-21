@@ -66,10 +66,10 @@ export const validate = (req, res, next) => {
         if (err) console.error("Error deleting file:", err);
       });
     }
-
     return res.status(400).json({
       status: "Error",
-      message: errorMessage,
+      message: "Validation failed",
+      errors: errorMessage,
     });
   }
   next();
