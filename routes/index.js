@@ -5,6 +5,7 @@ import category from "./categoryRoutes.js";
 import product from "./productRoutes.js";
 import session from "./sessionRoutes.js";
 import transaction from "./transactionRoute.js";
+import recap from "./recapRoutes.js";
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.use("/product", product);
 app.use("/session", session);
 app.use("/session", session);
 app.use("/transaction", transaction);
+app.use("/recap", recap);
 
 export default app;

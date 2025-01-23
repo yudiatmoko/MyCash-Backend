@@ -61,7 +61,10 @@ class TransactionModel {
         },
       },
     });
-    return transactions;
+    const sortedTransactions = transactions.sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+    return sortedTransactions;
   };
 
   getTransactionById = async (id) => {
@@ -125,7 +128,10 @@ class TransactionModel {
         },
       },
     });
-    return transactions;
+    const sortedTransactions = transactions.sort(
+      (a, b) => new Date(a.date) - new Date(b.date)
+    );
+    return sortedTransactions;
   };
 
   getNextTransactionNumber = async (date) => {
