@@ -6,7 +6,6 @@
   "scripts": {
     "start": "nodemon index.js",
     "build": "prisma generate && node index.js",
-    "prisma:generate": "prisma generate",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
