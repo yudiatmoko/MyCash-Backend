@@ -64,8 +64,11 @@ class TransactionController {
 
   async getBySession(req, res) {
     try {
+      const { order, number } = req.query;
       const sessionId = req.params.sessionId;
       const transactions = await TransactionService.getTransactionsBySession(
+        order,
+        number,
         sessionId
       );
       res.status(200).json({

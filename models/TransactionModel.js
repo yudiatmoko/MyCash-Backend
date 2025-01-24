@@ -98,10 +98,19 @@ class TransactionModel {
     return transaction;
   };
 
-  getTransactionsBySession = async (sessionId) => {
+  getTransactionsBySession = async (query, sessionId) => {
+    const { number, order = "desc" } = query;
     const transactions = await this.prisma.transaction.findMany({
       where: {
         sessionId,
+        ...(number && {
+          number: {
+            equals: parseInt(number, 10),
+          },
+        }),
+      },
+      orderBy: {
+        date: order,
       },
       include: {
         details: true,
@@ -128,10 +137,7 @@ class TransactionModel {
         },
       },
     });
-    const sortedTransactions = transactions.sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
-    return sortedTransactions;
+    return transactions;
   };
 
   getNextTransactionNumber = async (date) => {

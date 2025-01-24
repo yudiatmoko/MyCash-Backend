@@ -108,8 +108,9 @@ class TransactionService {
     return transaction;
   }
 
-  async getTransactionsBySession(sessionId) {
+  async getTransactionsBySession(order, number, sessionId) {
     const transactions = await TransactionModel.getTransactionsBySession(
+      { order, number },
       sessionId
     );
     if (transactions.length === 0) {
