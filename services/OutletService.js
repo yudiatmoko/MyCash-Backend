@@ -1,6 +1,10 @@
-import { deleteImageByFilename } from "../config/file.js";
 import OutletModel from "../models/OutletModel.js";
 import UserService from "../services/UserService.js";
+import {
+  uploadBufferToCloudinary,
+  destroyImageFromCloudinary,
+  extractPublicIdFromUrl,
+} from "../config/cloudinary.js";
 
 class OutletService {
   async getAllOutlets() {
@@ -64,12 +68,23 @@ class OutletService {
     image
   ) {
     const existingOutlet = await this.getOutletById(id);
-    let imagePath = existingOutlet.image;
+    let imageUrl = existingOutlet.image;
     if (image) {
       if (existingOutlet.image) {
-        deleteImageByFilename(existingOutlet.image);
+        try {
+          const publicId = extractPublicIdFromUrl(existingOutlet.image);
+          await destroyImageFromCloudinary(publicId);
+        } catch (error) {
+          console.error(
+            "Failed to delete previous image from Cloudinary:",
+            error.message
+          );
+        }
       }
-      imagePath = image.filename;
+      const result = await uploadBufferToCloudinary(image.buffer, {
+        folder: "public",
+      });
+      imageUrl = result.secure_url;
     }
     const newData = {
       name: name || existingOutlet.name,
@@ -79,7 +94,7 @@ class OutletService {
       district: district || existingOutlet.district,
       city: city || existingOutlet.city,
       province: province || existingOutlet.province,
-      image: imagePath,
+      image: imageUrl,
       userId: existingOutlet.userId,
     };
     const updatedOutlet = await OutletModel.updateOutlet(id, newData);

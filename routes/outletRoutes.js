@@ -1,6 +1,6 @@
 import express from "express";
 import OutletController from "../controllers/OutletController.js";
-import uploadImageMiddleware from "../middlewares/uploadImageMiddleware.js";
+import handleFileUpload from "../middlewares/uploadFileMiddleware.js";
 import { authenticateToken, protectedRoute } from "../config/jwt.js";
 import {
   addOutletValidationRules,
@@ -36,7 +36,7 @@ router.put(
   authenticateToken,
   protectedRoute,
   updateOutletValidationRules(),
-  uploadImageMiddleware,
+  handleFileUpload,
   validate,
   OutletController.update
 );

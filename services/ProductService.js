@@ -1,7 +1,11 @@
 import ProductModel from "../models/ProductModel.js";
 import OutletService from "../services/OutletService.js";
 import CategoryService from "../services/CategoryService.js";
-import { deleteImageByFilename } from "../config/file.js";
+import {
+  uploadBufferToCloudinary,
+  destroyImageFromCloudinary,
+  extractPublicIdFromUrl,
+} from "../config/cloudinary.js";
 
 class ProductService {
   async addProduct(
@@ -25,6 +29,17 @@ class ProductService {
       throw new Error("Stock must be a non-negative integer");
     }
     const booleanStatus = status === "true" ? true : false;
+
+    let imageUrl = null;
+    if (image) {
+      const result = await uploadBufferToCloudinary(image.buffer, {
+        folder: "public",
+      });
+      imageUrl = result.secure_url;
+    } else {
+      throw new Error("Image is required");
+    }
+
     const product = {
       name,
       description,
@@ -33,7 +48,7 @@ class ProductService {
       stock: intStock,
       categoryId,
       outletId,
-      image: image.filename,
+      image: imageUrl,
     };
     const newProduct = await ProductModel.addProduct(product);
     return newProduct;
@@ -93,13 +108,26 @@ class ProductService {
     }
     const booleanStatus =
       status === "true" ? true : status === "false" ? false : null;
-    let imagePath = existingProduct.image;
+
+    let imageUrl = existingProduct.image;
     if (image) {
       if (existingProduct.image) {
-        deleteImageByFilename(existingProduct.image);
+        try {
+          const publicId = extractPublicIdFromUrl(existingProduct.image);
+          await destroyImageFromCloudinary(publicId);
+        } catch (error) {
+          console.error(
+            "Failed to delete previous image from Cloudinary:",
+            error.message
+          );
+        }
       }
-      imagePath = image.filename;
+      const result = await uploadBufferToCloudinary(image.buffer, {
+        folder: "public",
+      });
+      imageUrl = result.secure_url;
     }
+
     const product = {
       name: name || existingProduct.name,
       description: description || existingProduct.description,
@@ -107,7 +135,7 @@ class ProductService {
       status: booleanStatus !== null ? booleanStatus : existingProduct.status,
       stock: intStock !== null ? intStock : existingProduct.stock,
       categoryId: categoryId || existingProduct.categoryId,
-      image: imagePath,
+      image: imageUrl,
     };
     const updatedProduct = ProductModel.updateProduct(id, product);
     return updatedProduct;

@@ -1,6 +1,6 @@
 import express from "express";
 import ProductController from "../controllers/ProductController.js";
-import uploadImageMiddleware from "../middlewares/uploadImageMiddleware.js";
+import handleFileUpload from "../middlewares/uploadFileMiddleware.js";
 import { authenticateToken, protectedRoute } from "../config/jwt.js";
 import {
   addProductValidationRules,
@@ -33,7 +33,7 @@ router.post(
   "/",
   authenticateToken,
   protectedRoute,
-  uploadImageMiddleware,
+  handleFileUpload,
   addProductValidationRules(),
   validate,
   ProductController.add
@@ -42,7 +42,7 @@ router.put(
   "/(:id)",
   authenticateToken,
   protectedRoute,
-  uploadImageMiddleware,
+  handleFileUpload,
   updateProductValidationRules(),
   validate,
   ProductController.update

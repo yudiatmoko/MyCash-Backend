@@ -1,6 +1,6 @@
 import express from "express";
 import UserController from "../controllers/UserController.js";
-import uploadImageMiddleware from "../middlewares/uploadImageMiddleware.js";
+import handleFileUpload from "../middlewares/uploadFileMiddleware.js";
 import { authenticateToken } from "../config/jwt.js";
 import {
   registerValidationRules,
@@ -25,7 +25,7 @@ router.put(
   "/(:id)",
   authenticateToken,
   updateValidationRules(),
-  uploadImageMiddleware,
+  handleFileUpload,
   validate,
   UserController.update
 );

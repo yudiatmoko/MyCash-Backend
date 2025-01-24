@@ -1,9 +1,11 @@
 const mailerConfig = {
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  service: "Gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: "3c3b26f7711a7c",
-    pass: "2f35bf4d572f3c",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASSWORD,
   },
 };
 

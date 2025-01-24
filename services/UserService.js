@@ -2,10 +2,13 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import UserModel from "../models/UserModel.js";
 import OtpModel from "../models/OtpModel.js";
-import { generateToken } from "../config/jwt.js";
 import sendEmail from "../config/sendEmail.js";
-import { deleteImageByFilename } from "../config/file.js";
-
+import { generateToken } from "../config/jwt.js";
+import {
+  uploadBufferToCloudinary,
+  destroyImageFromCloudinary,
+  extractPublicIdFromUrl,
+} from "../config/cloudinary.js";
 class UserService {
   async registerUser(name, email, password) {
     const existingUser = await UserModel.getUserByEmail(email);
@@ -92,17 +95,28 @@ class UserService {
     if (existingPhoneNumber && existingPhoneNumber.id !== id) {
       throw new Error("Phone number already exists");
     }
-    let imagePath = user.image;
+    let imageUrl = user.image;
     if (image) {
       if (user.image) {
-        deleteImageByFilename(user.image);
+        try {
+          const publicId = extractPublicIdFromUrl(user.image);
+          await destroyImageFromCloudinary(publicId);
+        } catch (error) {
+          console.error(
+            "Failed to delete previous image from Cloudinary:",
+            error.message
+          );
+        }
       }
-      imagePath = image.filename;
+      const result = await uploadBufferToCloudinary(image.buffer, {
+        folder: "public",
+      });
+      imageUrl = result.secure_url;
     }
     const newData = {
       name: name || user.name,
       phoneNumber: phoneNumber || user.phoneNumber,
-      image: imagePath,
+      image: imageUrl,
     };
     const updatedUser = await UserModel.updateUser(id, newData);
     return updatedUser;
