@@ -94,10 +94,10 @@ class TransactionService {
       }
       return {
         productId: item.productId,
-        productName: existingProduct.name,
+        productName: product.name,
         productQty: item.productQty,
-        productPrice: existingProduct.price,
-        totalPrice: item.productQty * existingProduct.price,
+        productPrice: product.price,
+        totalPrice: item.productQty * product.price,
       };
     });
     const totalPrice = details.reduce(
