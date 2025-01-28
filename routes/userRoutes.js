@@ -22,19 +22,19 @@ router.post(
 );
 router.post("/login", loginValidationRules(), validate, UserController.login);
 router.put(
+  "/(:id)/password",
+  authenticateToken,
+  updatePasswordValidationRules(),
+  validate,
+  UserController.updatePassword
+);
+router.put(
   "/(:id)",
   authenticateToken,
   updateValidationRules(),
   handleFileUpload,
   validate,
   UserController.update
-);
-router.put(
-  "/(:id)/password",
-  authenticateToken,
-  updatePasswordValidationRules(),
-  validate,
-  UserController.updatePassword
 );
 router.delete("/(:id)", authenticateToken, UserController.delete);
 router.post("/generate-otp", authenticateToken, UserController.generateOtp);
