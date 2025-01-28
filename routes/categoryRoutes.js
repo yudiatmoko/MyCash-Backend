@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get("/", authenticateToken, protectedRoute, CategoryController.get);
 router.get(
-  "/outlet/(:id)",
+  "/outlet/(:outletId)",
   authenticateToken,
   protectedRoute,
   CategoryController.getByOutlet
