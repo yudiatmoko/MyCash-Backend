@@ -155,7 +155,15 @@ class UserService {
   async deleteUser(id) {
     const user = await this.getUserById(id);
     if (user.image) {
-      deleteImageByFilename(user.image);
+      try {
+        const publicId = extractPublicIdFromUrl(user.image);
+        await destroyImageFromCloudinary(publicId);
+      } catch (error) {
+        console.error(
+          "Failed to delete previous image from Cloudinary:",
+          error.message
+        );
+      }
     }
     const deletedUser = await UserModel.deleteUser(id);
     return deletedUser;
