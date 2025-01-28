@@ -58,9 +58,9 @@ class TransactionService {
       note: note || null,
       sessionId: sessionId,
     };
+    await SessionService.updateRevenue(sessionId, totalPrice);
     const newTransaction = await TransactionModel.addTransaction(transaction);
     await TransactionModel.addTransactionDetail(newTransaction.id, details);
-    await SessionService.updateRevenue(sessionId, totalPrice);
     const detailsWithoutTransactionId = details.map(
       ({ transactionId, ...rest }) => rest
     );
