@@ -79,8 +79,9 @@ class ProductService {
     return products;
   }
 
-  async getProductsByCategory(slug) {
-    const products = await ProductModel.getProductsByCategory(slug);
+  async getProductsByCategory(outletId, slug) {
+    await OutletService.getOutletById(outletId);
+    const products = await ProductModel.getProductsByCategory(outletId, slug);
     if (products.length === 0) {
       throw new Error("No products found for the category");
     }

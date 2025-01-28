@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.get("/", authenticateToken, protectedRoute, ProductController.get);
 router.get(
-  "/category/(:slug)",
+  "/outlet/(:outletId)/category/(:slug)",
   authenticateToken,
   protectedRoute,
   ProductController.getByCategory

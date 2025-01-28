@@ -3,7 +3,8 @@ import ProductService from "../services/ProductService.js";
 class ProductController {
   async add(req, res) {
     try {
-      const { name, description, price, status, stock, categoryId, outletId } = req.body;
+      const { name, description, price, status, stock, categoryId, outletId } =
+        req.body;
       const image = req.file;
       const product = await ProductService.addProduct(
         name,
@@ -73,7 +74,11 @@ class ProductController {
   async getByCategory(req, res) {
     try {
       const slug = req.params.slug;
-      const product = await ProductService.getProductsByCategory(slug);
+      const outletId = req.params.outletId;
+      const product = await ProductService.getProductsByCategory(
+        outletId,
+        slug
+      );
       res.status(200).json({
         status: "Success",
         message: "Products fetched successfully",

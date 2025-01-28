@@ -29,9 +29,10 @@ class ProductModel {
     return products;
   };
 
-  getProductsByCategory = async (slug) => {
+  getProductsByCategory = async (outletId, slug) => {
     const products = await this.prisma.product.findMany({
       where: {
+        outletId,
         category: {
           slug: slug,
         },
