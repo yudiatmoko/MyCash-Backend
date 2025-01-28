@@ -123,7 +123,7 @@ class UserService {
   }
 
   async updatePassword(id, oldPassword, newPassword) {
-    const user = await this.getUserById(id);
+    const user = await UserModel.getUserByIdForUpdatePassword(id);
     const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
     if (!isPasswordValid) {
       throw new Error("Invalid old password");

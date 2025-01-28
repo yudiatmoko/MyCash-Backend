@@ -38,6 +38,24 @@ class UserModel {
     return user;
   };
 
+  getUserByIdForUpdatePassword = async (id) => {
+    const user = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phoneNumber: true,
+        image: true,
+        isVerified: true,
+        password: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return user;
+  }
+
   getUserByEmail = async (email) => {
     const user = await this.prisma.user.findUnique({ where: { email } });
     return user;
