@@ -19,7 +19,7 @@ class UserService {
     const user = { name, email, password: hashedPassword };
     const newUser = await UserModel.addUser(user);
 
-    this.generateOtp(email);
+    await this.generateOtp(email);
 
     const token = generateToken({ id: newUser.id });
     return {
