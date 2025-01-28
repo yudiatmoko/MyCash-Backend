@@ -144,7 +144,15 @@ class ProductService {
   async deleteProduct(id) {
     const existingProduct = await this.getProductById(id);
     if (existingProduct.image) {
-      deleteImageByFilename(existingProduct.image);
+      try {
+        const publicId = extractPublicIdFromUrl(existingProduct.image);
+        await destroyImageFromCloudinary(publicId);
+      } catch (error) {
+        console.error(
+          "Failed to delete previous image from Cloudinary:",
+          error.message
+        );
+      }
     }
     const deletedProduct = await ProductModel.deleteProduct(id);
     return deletedProduct;

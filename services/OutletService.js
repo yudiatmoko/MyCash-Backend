@@ -104,7 +104,15 @@ class OutletService {
   async deleteOutlet(id) {
     const outlet = await this.getOutletById(id);
     if (outlet.image) {
-      deleteImageByFilename(outlet.image);
+      try {
+        const publicId = extractPublicIdFromUrl(outlet.image);
+        await destroyImageFromCloudinary(publicId);
+      } catch (error) {
+        console.error(
+          "Failed to delete previous image from Cloudinary:",
+          error.message
+        );
+      }
     }
     const deletedOutlet = await OutletModel.deleteOutlet(id);
     return deletedOutlet;
