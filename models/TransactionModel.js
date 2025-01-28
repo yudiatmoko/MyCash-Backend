@@ -14,7 +14,14 @@ class TransactionModel {
 
   addTransactionDetail = async (transactionId, details) => {
     const newDetails = await this.prisma.transactionDetail.createMany({
-      data: details,
+      data: details.map((detail) => ({
+        transactionId: transactionId,
+        productId: detail.productId,
+        productName: detail.productName,
+        productQty: detail.productQty,
+        productPrice: detail.productPrice,
+        totalPrice: detail.totalPrice,
+      })),
     });
     return newDetails;
   };
@@ -131,14 +138,6 @@ class TransactionModel {
       },
     });
     return transactions;
-  };
-
-  getProductsByIds = async (productIds) => {
-    return await this.prisma.product.findMany({
-      where: {
-        id: { in: productIds },
-      },
-    });
   };
 
   getNextTransactionNumber = async (date) => {
