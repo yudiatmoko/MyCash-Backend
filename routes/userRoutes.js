@@ -37,8 +37,8 @@ router.put(
   UserController.update
 );
 router.delete("/(:id)", authenticateToken, UserController.delete);
-router.post("/generate-otp", authenticateToken, UserController.generateOtp);
+router.post("/generate-otp", UserController.generateOtp);
 router.post("/verify-otp", authenticateToken, UserController.verifyOtp);
-router.post("/reset-password", authenticateToken, UserController.resetPassword);
+router.post("/reset-password", UserController.resetPassword);
 
 export default router;
