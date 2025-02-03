@@ -23,9 +23,9 @@ class OutletService {
     return outlet;
   }
 
-  async getOutletsByUser(userId) {
+  async getOutletsByUser(userId, name) {
     await UserService.getUserById(userId);
-    const outlets = await OutletModel.getOutletsByUserId(userId);
+    const outlets = await OutletModel.getOutletsByUserId(userId, { name });
     if (outlets.length === 0) {
       throw new Error("No outlets found for the user");
     }

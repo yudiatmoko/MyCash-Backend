@@ -17,9 +17,10 @@ class OutletModel {
     return outlet;
   };
 
-  getOutletsByUserId = async (userId) => {
+  getOutletsByUserId = async (userId, query) => {
+    const { name } = query;
     const outlets = await this.prisma.outlet.findMany({
-      where: { userId },
+      where: { userId, name: { contains: name, mode: "insensitive" } },
     });
     return outlets;
   };

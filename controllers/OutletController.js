@@ -60,9 +60,10 @@ class OutletController {
 
   async getByUser(req, res) {
     try {
+      const name = req.query.name;
       const token = getTokenFromHeader(req);
       const userId = decodeUserId(token);
-      const outlets = await OutletService.getOutletsByUser(userId);
+      const outlets = await OutletService.getOutletsByUser(userId, name);
       if (outlets.length === 0) {
         res.status(404).json({
           status: "Error",
