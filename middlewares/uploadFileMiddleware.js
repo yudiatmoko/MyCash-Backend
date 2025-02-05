@@ -13,12 +13,6 @@ const handleFileUpload = (req, res, next) => {
         error: err.message,
       });
     }
-    if (!req.file) {
-      return res.status(400).json({
-        statusCode: 400,
-        message: "Missing required parameter - file",
-      });
-    }
     next();
   });
 };

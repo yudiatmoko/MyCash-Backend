@@ -136,7 +136,7 @@ class ProductService {
       status: booleanStatus !== null ? booleanStatus : existingProduct.status,
       stock: intStock !== null ? intStock : existingProduct.stock,
       categoryId: categoryId || existingProduct.categoryId,
-      image: imageUrl,
+      image: image ? imageUrl : existingProduct.image,
     };
     const updatedProduct = ProductModel.updateProduct(id, product);
     return updatedProduct;

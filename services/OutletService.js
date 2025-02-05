@@ -94,7 +94,7 @@ class OutletService {
       district: district || existingOutlet.district,
       city: city || existingOutlet.city,
       province: province || existingOutlet.province,
-      image: imageUrl,
+      image: image ? imageUrl : existingOutlet.image,
       userId: existingOutlet.userId,
     };
     const updatedOutlet = await OutletModel.updateOutlet(id, newData);

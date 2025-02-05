@@ -116,7 +116,7 @@ class UserService {
     const newData = {
       name: name || user.name,
       phoneNumber: phoneNumber || user.phoneNumber,
-      image: imageUrl,
+      image: image ? imageUrl : user.image,
     };
     const updatedUser = await UserModel.updateUser(id, newData);
     return updatedUser;
