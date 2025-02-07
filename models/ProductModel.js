@@ -22,9 +22,15 @@ class ProductModel {
     return product;
   };
 
-  getProductsByOutlet = async (outletId) => {
+  getProductsByOutlet = async (outletId, query) => {
+    const { name, slug } = query;
     const products = await this.prisma.product.findMany({
-      where: { outletId },
+      where: {
+        outletId,
+        name: { contains: name, mode: "insensitive" },
+        category: { slug: slug },
+      },
+      orderBy: { name: "asc" },
     });
     return products;
   };

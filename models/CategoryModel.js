@@ -22,9 +22,11 @@ class CategoryModel {
     return category;
   };
 
-  getCategoriesByOutlet = async (outletId) => {
+  getCategoriesByOutlet = async (outletId, query) => {
+    const { name } = query;
     const categories = await this.prisma.category.findMany({
-      where: { outletId },
+      where: { outletId, name: { contains: name, mode: "insensitive" } },
+      orderBy: { name: "asc" },
     });
     return categories;
   };

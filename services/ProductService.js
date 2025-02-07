@@ -70,9 +70,12 @@ class ProductService {
     return product;
   }
 
-  async getProductsByOutlet(outletId) {
+  async getProductsByOutlet(outletId, name, slug) {
     await OutletService.getOutletById(outletId);
-    const products = await ProductModel.getProductsByOutlet(outletId);
+    const products = await ProductModel.getProductsByOutlet(outletId, {
+      name,
+      slug,
+    });
     if (products.length === 0) {
       throw new Error("No products found for the outlet");
     }

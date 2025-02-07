@@ -46,8 +46,12 @@ class CategoryController {
 
   async getByOutlet(req, res) {
     try {
+      const name = req.query.name;
       const outletId = req.params.outletId;
-      const categories = await CategoryService.getCategoriesByOutlet(outletId);
+      const categories = await CategoryService.getCategoriesByOutlet(
+        outletId,
+        name
+      );
       res.status(200).json({
         status: "Success",
         message: "Outlet categories fetched successfully",

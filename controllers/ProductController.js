@@ -44,8 +44,12 @@ class ProductController {
 
   async getByOutlet(req, res) {
     try {
+      const name = req.query.name;
+      const slug = req.query.slug;
       const products = await ProductService.getProductsByOutlet(
-        req.params.outletId
+        req.params.outletId,
+        name,
+        slug
       );
       res.status(200).json({
         status: "Success",

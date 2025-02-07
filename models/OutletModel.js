@@ -21,6 +21,7 @@ class OutletModel {
     const { name } = query;
     const outlets = await this.prisma.outlet.findMany({
       where: { userId, name: { contains: name, mode: "insensitive" } },
+      orderBy: { name: "asc" },
     });
     return outlets;
   };
