@@ -194,6 +194,7 @@ class SessionModel {
         totalTransactions: session.transactions.length,
         successfulTransactions,
         voidedTransactions,
+        startingCash: session.startingCash,
         totalRevenue,
         paymentSummary,
       };
