@@ -160,6 +160,11 @@ class SessionModel {
             },
           },
         },
+        user: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
 
@@ -191,11 +196,16 @@ class SessionModel {
       return {
         sessionId: session.id,
         date: session.date,
+        shift: session.shift,
+        startingCash: session.startingCash,
+        totalRevenue,
+        checkInTime: session.checkInTime,
+        checkOutTime: session.checkOutTime,
+        user: session.user,
+        outletId: session.outletId,
         totalTransactions: session.transactions.length,
         successfulTransactions,
         voidedTransactions,
-        startingCash: session.startingCash,
-        totalRevenue,
         paymentSummary,
       };
     });
