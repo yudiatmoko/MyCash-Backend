@@ -46,10 +46,12 @@ class ProductController {
     try {
       const name = req.query.name;
       const slug = req.query.slug;
+      const status = req.query.status;
       const products = await ProductService.getProductsByOutlet(
         req.params.outletId,
         name,
-        slug
+        slug,
+        status
       );
       res.status(200).json({
         status: "Success",

@@ -23,12 +23,13 @@ class ProductModel {
   };
 
   getProductsByOutlet = async (outletId, query) => {
-    const { name, slug } = query;
+    const { name, slug, status } = query;
     const products = await this.prisma.product.findMany({
       where: {
         outletId,
         name: { contains: name, mode: "insensitive" },
         category: { slug: slug },
+        status: status === "true" ? true : status === "false" ? false : null,
       },
       orderBy: { name: "asc" },
     });
