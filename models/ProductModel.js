@@ -29,7 +29,7 @@ class ProductModel {
         outletId,
         name: { contains: name, mode: "insensitive" },
         category: { slug: slug },
-        status: status === "true" ? true : status === "false" ? false : null,
+        status: status === "true" ? true : status === "false" ? false : undefined,
       },
       orderBy: { name: "asc" },
     });
