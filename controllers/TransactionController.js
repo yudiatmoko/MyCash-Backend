@@ -27,8 +27,7 @@ class TransactionController {
       const voidedTransaction = await TransactionService.voidTransaction(id);
       res.status(200).json({
         status: "Success",
-        message: "Transaction voided successfully",
-        data: voidedTransaction,
+        message: "Transaction voided successfully"
       });
     } catch (error) {
       res.status(500).json({ status: "Error", message: error.message });
