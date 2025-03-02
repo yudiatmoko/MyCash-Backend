@@ -65,8 +65,7 @@ class TransactionService {
       ({ transactionId, ...rest }) => rest
     );
     const result = {
-      ...newTransaction,
-      details: detailsWithoutTransactionId,
+      transactionId: newTransaction.id,
     };
     return result;
   }
