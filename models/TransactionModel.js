@@ -99,13 +99,18 @@ class TransactionModel {
   };
 
   getTransactionsBySession = async (query, sessionId) => {
-    const { number, order = "desc" } = query;
+    const { number, id, order = "desc" } = query;
     const transactions = await this.prisma.transaction.findMany({
       where: {
         sessionId,
         ...(number && {
           number: {
             equals: parseInt(number, 10),
+          },
+        }),
+        ...(id && {
+          id: {
+            equals: id,
           },
         }),
       },
