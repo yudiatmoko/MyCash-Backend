@@ -86,7 +86,7 @@ model Product {
 }
 
 model Transaction {
-  id            String              @id @unique @default(uuid())
+  id            String              @id @unique
   number        Int
   date          DateTime
   totalPrice    Float               @map("total_price")

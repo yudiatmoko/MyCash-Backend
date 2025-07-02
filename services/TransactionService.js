@@ -1,6 +1,7 @@
 import TransactionModel from "../models/TransactionModel.js";
 import ProductService from "./ProductService.js";
 import SessionService from "./SessionService.js";
+import generateTransactionId from "../config/generateTransactionId.js";
 
 class TransactionService {
   async addTransaction(totalPayment, paymentMethod, note, sessionId, detail) {
@@ -48,7 +49,11 @@ class TransactionService {
     const nextNumber = await TransactionModel.getNextTransactionNumber(
       transactionDate
     );
+    const session = await SessionService.getSessionById(sessionId);
+    const outletName = session.outlet.name;
+    const id = generateTransactionId(outletName, transactionDate, nextNumber);
     const transaction = {
+      id: id,
       number: nextNumber,
       date: transactionDate,
       totalPrice,
@@ -61,9 +66,6 @@ class TransactionService {
     await SessionService.updateRevenue(sessionId, totalPrice);
     const newTransaction = await TransactionModel.addTransaction(transaction);
     await TransactionModel.addTransactionDetail(newTransaction.id, details);
-    const detailsWithoutTransactionId = details.map(
-      ({ transactionId, ...rest }) => rest
-    );
     const result = {
       transactionId: newTransaction.id,
     };
