@@ -10,7 +10,6 @@ const db = new Pool({
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
   ssl: {
-    ca: process.env.SSL_CA,
     rejectUnauthorized: false,
   },
 });
