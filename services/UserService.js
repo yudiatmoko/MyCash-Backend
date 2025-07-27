@@ -9,8 +9,16 @@ import {
   destroyImageFromCloudinary,
   extractPublicIdFromUrl,
 } from "../config/cloudinary.js";
+import dotenv from "dotenv";
+dotenv.config();
+
 class UserService {
-  async registerUser(name, email, password) {
+  async registerUser(name, email, password, accessCode) {
+
+    if (accessCode !== process.env.ACCESS_CODE) {
+      throw new Error("Invalid access code");
+    }
+
     const existingUser = await UserModel.getUserByEmail(email);
     if (existingUser) {
       throw new Error("Email already exists");

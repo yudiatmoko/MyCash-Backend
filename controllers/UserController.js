@@ -6,7 +6,8 @@ class UserController {
       const user = await UserService.registerUser(
         req.body.name,
         req.body.email,
-        req.body.password
+        req.body.password,
+        req.body.accessCode
       );
       res.status(200).json({
         status: "Success",
