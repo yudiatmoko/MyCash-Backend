@@ -1,5 +1,7 @@
 import pkg from "pg";
 import dotenv from "dotenv";
+import fs from "fs";
+
 dotenv.config();
 const { Pool } = pkg;
 
@@ -9,9 +11,10 @@ const db = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl: process.env.DB_CA_PEM ? {
+    rejectUnauthorized: true,
+    ca: fs.readFileSync(process.env.DB_CA_PEM).toString(),
+  } : { rejectUnauthorized: false },
 });
 
 async function testConnection() {

@@ -1,16 +1,14 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { testConnection } from "./config/db.js";
 import bodyParser from "body-parser";
 import router from "./routes/index.js";
 import cron from "node-cron";
-import { PrismaClient } from "@prisma/client";
+import prisma from "./config/prisma.js";
 
 dotenv.config();
 const app = express();
 const port = process.env.APP_PORT;
-const prisma = new PrismaClient();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -29,7 +27,11 @@ cron.schedule("* * * * *", async () => {
   });
 });
 
-app.listen(port, async () => {
-  await testConnection();
-  console.log(`Running at ${port}`);
+app.listen(port, () => {
+  prisma.$connect()
+    .then(() => {
+      console.log("Prisma Database connection success");
+      console.log(`Running at ${port}`);
+    })
+    .catch((err) => console.log("Database connection failed", err));
 });

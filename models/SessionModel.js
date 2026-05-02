@@ -1,9 +1,10 @@
-import { PrismaClient, Shift } from "@prisma/client";
+import { Shift } from "@prisma/client";
+import prisma from "../config/prisma.js";
 import { check } from "express-validator";
 
 class SessionModel {
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   addSession = async (session) => {

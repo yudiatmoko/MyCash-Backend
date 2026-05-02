@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "../config/prisma.js";
 
 class ReceiptImageModel {
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = prisma;
   }
 
   addSessionImage = async (sessionImage) => {
